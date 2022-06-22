@@ -2,7 +2,7 @@ package br.com.rafa_macedo.comidas_gerais.di
 
 import br.com.rafa_macedo.comidas_gerais.BuildInfoProvider
 import br.com.rafa_macedo.comidas_gerais.data.CredentialInterceptor
-import br.com.rafa_macedo.comidas_gerais.data.RecipesService
+import br.com.rafa_macedo.comidas_gerais.data.service.RecipesService
 import br.com.rafa_macedo.comidas_gerais.data.datasource.RecipeDataRemoteSource
 import br.com.rafa_macedo.comidas_gerais.data.datasource.RecipeDataSource
 import br.com.rafa_macedo.comidas_gerais.data.repository.Repository
