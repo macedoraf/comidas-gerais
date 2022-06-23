@@ -1,7 +1,9 @@
 package br.com.rafa_macedo.comidas_gerais.data.repository
 
-import br.com.rafa_macedo.comidas_gerais.data.response.Recipe
+import br.com.rafa_macedo.comidas_gerais.data.response.RecipeAutoComplete
+import br.com.rafa_macedo.comidas_gerais.data.response.RecipeInformation
 
 interface Repository {
-    fun getRecipeInfo(isIncludeNutrition: Boolean): Recipe?
+    suspend fun getRecipeInfo(isIncludeNutrition: Boolean): RecipeInformation.Response
+    suspend fun requestRecipeAutoComplete(query: String): RecipeAutoComplete.Response
 }

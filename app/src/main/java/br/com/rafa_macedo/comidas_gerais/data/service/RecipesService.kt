@@ -27,6 +27,4 @@ interface RecipesService {
         @Query("query") query: String,
         @Query("number") number: Int
     ): Response<RecipeAutoComplete.Response>
-
-
 }

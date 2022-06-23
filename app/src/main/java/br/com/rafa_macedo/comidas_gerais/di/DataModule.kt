@@ -11,6 +11,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -29,6 +30,11 @@ object DataModule {
     }
 
     @Provides
+    fun provideDispatcher(): Dispatcher =
+        Dispatcher().apply { maxRequests = 1 }
+
+
+    @Provides
     fun provideRetrofitClient(
         okHttpClient: OkHttpClient,
         converterFactory: GsonConverterFactory
@@ -41,10 +47,11 @@ object DataModule {
     }
 
     @Provides
-    fun provideOkHttpClient(credentialInterceptor: CredentialInterceptor): OkHttpClient =
+    fun provideOkHttpClient(credentialInterceptor: CredentialInterceptor, dispatcher: Dispatcher): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor())
             .addInterceptor(credentialInterceptor)
+            .dispatcher(dispatcher)
             .build()
 
     @Provides
