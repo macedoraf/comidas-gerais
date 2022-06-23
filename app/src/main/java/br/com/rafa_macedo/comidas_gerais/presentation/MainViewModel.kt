@@ -17,6 +17,9 @@ class MainViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel(), LifecycleObserver {
 
+    val predictions: List<Any> = mutableListOf()
+    var query: String = ""
+
     val onSearchTextChange = { text: String ->
         val result = viewModelScope.launch {
             repository.requestRecipeAutoComplete(text)

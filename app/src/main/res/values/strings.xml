@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">comidas-gerais</string>
+    <string name="recipe_search_label">Search</string>
 </resources>

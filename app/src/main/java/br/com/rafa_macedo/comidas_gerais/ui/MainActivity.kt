@@ -6,12 +6,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.IconButton
@@ -21,9 +24,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import br.com.rafa_macedo.comidas_gerais.R
 import br.com.rafa_macedo.comidas_gerais.presentation.MainViewModel
 import br.com.rafa_macedo.comidas_gerais.ui.theme.ComidasgeraisTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +49,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    Content()
                 }
             }
         }
@@ -51,8 +57,73 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun Greeting(name: String) {
-        Text(text = "Hello $name!", Modifier.clickable { })
+    fun Content() {
+        AutoCompleteTextView(
+            modifier = Modifier.fillMaxWidth(),
+            query = viewModel.query,
+            queryLabel = getString(R.string.recipe_search_label),
+            onQueryChanged = { query ->
+                viewModel.query = query
+            },
+            predictions = viewModel.predictions,
+            onDoneActionClick = {},
+            onClearClick = { viewModel.query = "" },
+            onItemClick = {},
+            itemContent = { Text(text = "Teste") }
+        )
+    }
+
+    @Composable
+    fun <T> AutoCompleteTextView(
+        modifier: Modifier,
+        query: String,
+        queryLabel: String,
+        onQueryChanged: (String) -> Unit = {},
+        predictions: List<T>,
+        onDoneActionClick: () -> Unit = {},
+        onClearClick: () -> Unit = {},
+        onItemClick: (T) -> Unit = {},
+        itemContent: @Composable (T) -> Unit = {}
+    ) {
+        val view = LocalView.current
+        val lazyListState = rememberLazyListState()
+
+        LazyColumn(
+            state = lazyListState,
+            modifier = modifier.heightIn(max = TextFieldDefaults.MinHeight * 6)
+        ) {
+            item {
+                QuerySearch(
+                    query = query,
+                    label = queryLabel,
+                    onQueryChanged = onQueryChanged,
+                    onDoneActionClick = {
+                        view.clearFocus()
+                        onDoneActionClick()
+                    },
+                    onClearClick = {
+                        onClearClick()
+                    }
+                )
+            }
+
+            if (predictions.isNotEmpty()) {
+                items(predictions) { prediction ->
+                    Row(
+                        Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth()
+                            .clickable {
+                                view.clearFocus()
+                                onItemClick(prediction)
+                            }
+                    ) {
+                        itemContent(prediction)
+                    }
+                }
+            }
+
+        }
     }
 
     @Composable
@@ -98,7 +169,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun DefaultPreview() {
         ComidasgeraisTheme {
-            Greeting("Android")
+            Content()
         }
     }
 }
