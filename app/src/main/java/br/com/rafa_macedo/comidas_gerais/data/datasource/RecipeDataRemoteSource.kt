@@ -7,7 +7,7 @@ import br.com.rafa_macedo.comidas_gerais.data.response.RecipeSummary
 
 class RecipeDataRemoteSource(private val recipesService: RecipesService) : RecipeDataSource {
 
-    override fun getInformation(request: RecipeInformation.Request): RecipeInformation.Response {
+    override suspend fun getInformation(request: RecipeInformation.Request): RecipeInformation.Response {
         val response = recipesService.getInformation(request.id, false)
 
         if (response.isSuccessful && response.body() != null) {
@@ -17,7 +17,7 @@ class RecipeDataRemoteSource(private val recipesService: RecipesService) : Recip
         throw RuntimeException()
     }
 
-    override fun getSummary(request: RecipeSummary.Request): RecipeSummary.Response {
+    override suspend fun getSummary(request: RecipeSummary.Request): RecipeSummary.Response {
         val response = recipesService.getSummary(request.id)
 
         if (response.isSuccessful && response.body() != null) {
@@ -27,7 +27,7 @@ class RecipeDataRemoteSource(private val recipesService: RecipesService) : Recip
         throw RuntimeException()
     }
 
-    override fun autoCompleteSearch(request: RecipeAutoComplete.Request): RecipeAutoComplete.Response {
+    override suspend fun autoCompleteSearch(request: RecipeAutoComplete.Request): List<RecipeAutoComplete.Response> {
         val response = recipesService.autoCompleteSearch(request.query, request.number)
 
         if (response.isSuccessful && response.body() != null) {

@@ -1,7 +1,6 @@
 package br.com.rafa_macedo.comidas_gerais.ui
 
 import android.os.Bundle
-import android.widget.AutoCompleteTextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -27,13 +26,14 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import br.com.rafa_macedo.comidas_gerais.R
 import br.com.rafa_macedo.comidas_gerais.presentation.MainViewModel
+import br.com.rafa_macedo.comidas_gerais.presentation.MainViewState
 import br.com.rafa_macedo.comidas_gerais.ui.theme.ComidasgeraisTheme
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import kotlinx.coroutines.flow.*
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -43,33 +43,36 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ComidasgeraisTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Content()
-                }
-            }
+            val viewState by viewModel.viewState.collectAsState()
+            Screen(
+                viewState.querySearchState,
+                viewModel.onQueryChanged,
+                viewModel.onDoneActionClick,
+                viewModel.onClearClick,
+                viewModel.onItemClick
+            )
         }
 
     }
 
     @Composable
-    fun Content() {
+    fun Screen(
+        viewState: MainViewState.QuerySearchState, onQueryChanged: (String) -> Unit,
+        onDoneActionClick: () -> Unit,
+        onClearClick: () -> Unit,
+        onItemClick: (String) -> Unit
+    ) {
+
         AutoCompleteTextView(
             modifier = Modifier.fillMaxWidth(),
-            query = viewModel.query,
+            query = viewState.query,
             queryLabel = getString(R.string.recipe_search_label),
-            onQueryChanged = { query ->
-                viewModel.query = query
-            },
-            predictions = viewModel.predictions,
-            onDoneActionClick = {},
-            onClearClick = { viewModel.query = "" },
-            onItemClick = {},
-            itemContent = { Text(text = "Teste") }
+            onQueryChanged = onQueryChanged,
+            predictions = viewState.predictions,
+            onDoneActionClick = onDoneActionClick,
+            onClearClick = onClearClick,
+            onItemClick = onItemClick,
+            itemContent = { Text(text = it) }
         )
     }
 
@@ -165,13 +168,13 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        ComidasgeraisTheme {
-            Content()
-        }
-    }
+//    @Preview(showBackground = true)
+//    @Composable
+//    fun DefaultPreview() {
+//        ComidasgeraisTheme {
+//            Content()
+//        }
+//    }
 }
 
 

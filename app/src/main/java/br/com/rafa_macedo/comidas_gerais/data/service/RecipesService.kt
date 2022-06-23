@@ -12,19 +12,19 @@ import retrofit2.http.Query
 interface RecipesService {
 
     @GET(value = "recipes/recipes/{id}/information")
-    fun getInformation(
+    suspend fun getInformation(
         @Path(value = "id") id: Long,
         @Query("includeNutrition") includeNutrition: Boolean
     ): Response<RecipeInformation.Response>
 
     @GET(value = "recipes/recipes/{id}/summary")
-    fun getSummary(
+    suspend fun getSummary(
         @Path(value = "id") id: Long,
     ): Response<RecipeSummary.Response>
 
     @GET(value = "recipes/autocomplete")
-    fun autoCompleteSearch(
+    suspend fun autoCompleteSearch(
         @Query("query") query: String,
         @Query("number") number: Int
-    ): Response<RecipeAutoComplete.Response>
+    ): Response<List<RecipeAutoComplete.Response>>
 }

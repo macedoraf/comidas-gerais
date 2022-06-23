@@ -12,7 +12,7 @@ class RepositoryImpl @Inject constructor(private val remoteDataSource: RecipeDat
         return remoteDataSource.getInformation(RecipeInformation.Request(0, isIncludeNutrition))
     }
 
-    override suspend fun requestRecipeAutoComplete(query: String): RecipeAutoComplete.Response {
+    override suspend fun requestRecipeAutoComplete(query: String): List<RecipeAutoComplete.Response> {
         return remoteDataSource.autoCompleteSearch(RecipeAutoComplete.Request(query, 2))
     }
 }
