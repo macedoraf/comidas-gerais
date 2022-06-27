@@ -67,6 +67,7 @@ dependencies {
     implementation "androidx.compose.material:material:1.2.0-rc02"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.google.dagger:hilt-android:$hiltVersion"
+    implementation("io.coil-kt:coil-compose:2.1.0")
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
